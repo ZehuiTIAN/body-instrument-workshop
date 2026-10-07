@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <title>06 · Two-Hand Instrument</title>
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="panel">
+    <h1>06 · TWO-HAND INSTRUMENT — 右手音高，左手音量</h1>
+    <button id="startButton">▶ Start Audio</button>
+    <div class="big-readout">
+      <span id="freqValue">——</span> <span class="sub">Hz</span><br />
+      <span class="sub">volume:</span> <span id="volValue">——</span>
+    </div>
+    <div class="status" id="status">正在启动…</div>
+    <div class="debug" id="debug"></div>
+  </div>
+
+  <script src="../shared/vendor/Tone.js"></script>
+  <script src="../shared/camera.js"></script>
+  <script src="../shared/debug.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
