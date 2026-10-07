@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01 · Camera</title>
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <!-- muted + playsinline 是 Safari 上自动播放摄像头的必要属性 -->
+    <video id="webcam" autoplay playsinline muted></video>
+  </div>
+
+  <div class="panel">
+    <h1>01 · CAMERA — 确认摄像头能工作</h1>
+    <div class="status" id="status">正在打开摄像头…</div>
+    <div class="debug" id="debug"></div>
+  </div>
+
+  <script src="../shared/camera.js"></script>
+  <script src="../shared/debug.js"></script>
+  <script>
+    // 这一步只做一件事：把摄像头的画面显示出来。
+    // 如果这一步失败，后面所有步骤都无从谈起——所以它是第一课。
+
+    const video = document.getElementById("webcam");
+    const status = document.getElementById("status");
+
+    startCamera(video)
+      .then(() => {
+        status.textContent = "摄像头正常 ✓";
+        status.className = "status ok";
+        DebugPanel.show({
+          "videoWidth": video.videoWidth,
+          "videoHeight": video.videoHeight,
+          "浏览器": navigator.userAgent.includes("Edg") ? "Edge"
+                   : navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") ? "Safari"
+                   : "Chrome/其他",
+        });
+      })
+      .catch((err) => {
+        status.textContent = err.message;
+        status.className = "status error";
+      });
+  </script>
+</body>
+</html>

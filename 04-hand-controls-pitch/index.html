@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>04 · Hand Controls Pitch</title>
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="panel">
+    <h1>04 · HAND CONTROLS PITCH — 手的高度 → 音高</h1>
+
+    <!-- 浏览器规定：声音必须由一次真实的用户点击启动 -->
+    <button id="startButton">▶ Start Audio</button>
+
+    <div class="big-readout">
+      <span id="freqValue">——</span> <span class="sub">Hz</span><br />
+      <span class="sub">hand y:</span> <span id="yValue">——</span>
+    </div>
+
+    <div class="status" id="status">正在启动…</div>
+    <div class="debug" id="debug"></div>
+  </div>
+
+  <!-- Tone.js 是普通 script，加载后得到全局对象 Tone -->
+  <script src="../shared/vendor/Tone.js"></script>
+  <script src="../shared/camera.js"></script>
+  <script src="../shared/debug.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

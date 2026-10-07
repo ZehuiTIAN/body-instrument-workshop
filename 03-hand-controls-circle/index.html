@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>03 · Hand Controls Circle</title>
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="panel">
+    <h1>03 · HAND CONTROLS CIRCLE — 身体动作 → 数字 → 界面</h1>
+    <div class="big-readout">
+      <span class="sub">x:</span> <span id="xValue">——</span><br />
+      <span class="sub">y:</span> <span id="yValue">——</span>
+    </div>
+    <div class="status" id="status">正在启动…</div>
+    <div class="debug" id="debug"></div>
+  </div>
+
+  <script src="../shared/camera.js"></script>
+  <script src="../shared/debug.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
