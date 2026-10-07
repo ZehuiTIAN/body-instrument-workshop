@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <title>09 · Effects</title>
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="panel">
+    <h1>09 · EFFECTS — 完整的映射链</h1>
+    <button id="startButton">▶ Start Audio</button>
+    <div class="big-readout">
+      <span class="sub">NOTE:</span> <span id="noteValue">——</span><br />
+      <span class="sub">filter:</span> <span id="filterValue">——</span> <span class="sub">Hz ·</span>
+      <span class="sub">reverb:</span> <span id="reverbValue">——</span>
+    </div>
+    <div class="status" id="status">正在启动…</div>
+    <div class="debug" id="debug"></div>
+  </div>
+
+  <script src="../shared/vendor/Tone.js"></script>
+  <script src="../shared/camera.js"></script>
+  <script src="../shared/debug.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

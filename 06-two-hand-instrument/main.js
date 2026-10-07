@@ -101,6 +101,7 @@ try {
       "→ pitch (Hz)": outputs.pitch !== null ? Math.round(outputs.pitch) : null,
       "→ volume (dB)": outputs.volume,
       "检测到的手": hands.length,
+      "audio": audioStarted ? "🔊 已启动" : "未启动",
     });
 
     requestAnimationFrame(loop);

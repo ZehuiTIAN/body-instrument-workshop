@@ -94,6 +94,7 @@ try {
         "scale index": safeIndex,
         "note": note,
         "音阶数组长度": scale.length,
+        "audio": audioStarted ? "🔊 已启动" : "未启动（先点 Start Audio）",
       });
     } else {
       volume.volume.rampTo(-Infinity, 0.2);

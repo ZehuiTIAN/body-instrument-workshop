@@ -12,13 +12,23 @@
 
 const DebugPanel = {
   element: null,
+  _lastShowTime: 0,
+  _fps: 0,
 
   show(data) {
     if (!this.element) {
       this.element = document.querySelector(".debug");
       if (!this.element) return;
     }
-    const lines = [];
+    // FPS：show() 每帧被调一次，调用间隔的倒数就是帧率（EMA 平滑显示）
+    const now = performance.now();
+    if (this._lastShowTime > 0) {
+      const instant = 1000 / Math.max(now - this._lastShowTime, 0.01);
+      this._fps = 0.1 * instant + 0.9 * this._fps;
+    }
+    this._lastShowTime = now;
+
+    const lines = [`<span class="label">FPS:</span> ${Math.round(this._fps)}`];
     for (const key of Object.keys(data)) {
       let value = data[key];
       if (value === null || value === undefined || Number.isNaN(value)) {

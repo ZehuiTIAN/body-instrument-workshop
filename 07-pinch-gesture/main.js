@@ -9,9 +9,17 @@
 
 import { initHands, detectHands, drawHands, INDEX_TIP, THUMB_TIP } from "../shared/hands.js";
 
-// ★ 捏合阈值：landmark 坐标是 0~1 的，0.07 大概是"指尖刚好碰上"。
-// 太容易触发就调小，太难触发就调大。
-const PINCH_THRESHOLD = 0.07;
+// ★ 捏合判断的参数。landmark 坐标是 0~1 的，0.06 大概是"指尖刚好碰上"。
+//
+// 为什么是两个阈值而不是一个？
+// 如果只有 distance < threshold，手停在阈值附近时，检测结果会在
+// 0.069 / 0.071 之间抖 → pinch 疯狂开关 → 声音变成"哒哒哒"。
+// 解决办法叫【迟滞 hysteresis】：进来走小门，出去走大门——
+//   距离 < ON 阈值  → 判定为捏合
+//   距离 > OFF 阈值 → 才判定为松开（OFF > ON，中间是"保持现状"的缓冲区）
+const PINCH_ON_THRESHOLD = 0.06;  // 捏合：距离要小于这个才算"捏上"
+const PINCH_OFF_THRESHOLD = 0.09; // 松开：距离要大于这个才算"放开"
+const MIN_HOLD_MS = 150;          // 最短保持：捏上后至少响 150ms，防止瞬间抖动误触发
 
 const LOW_FREQ = 220;
 const HIGH_FREQ = 880;
@@ -35,6 +43,8 @@ Tone.Destination.volume.value = -12;
 
 let audioStarted = false;
 let noteIsOn = false;
+let pinch = false;        // 捏合状态要跨帧记住，所以声明在循环外面
+let pinchStartTime = 0;
 startButton.addEventListener("click", async () => {
   await Tone.start();
   audioStarted = true;
@@ -65,10 +75,16 @@ try {
       const index = landmarks[INDEX_TIP];
 
       // ★ 手势就是一道数学题：两点距离
-      const dx = thumb.x - index.x;
-      const dy = thumb.y - index.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const pinch = distance < PINCH_THRESHOLD;
+      const distance = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+
+      // ★ 迟滞 + 最短保持：稳定的手势状态机（参数含义见文件顶部）
+      const now = performance.now();
+      if (!pinch && distance < PINCH_ON_THRESHOLD) {
+        pinch = true;
+        pinchStartTime = now;
+      } else if (pinch && distance > PINCH_OFF_THRESHOLD && now - pinchStartTime > MIN_HOLD_MS) {
+        pinch = false;
+      }
 
       // 手的高度仍然控制音高（连续频率）
       const freq = HIGH_FREQ * Math.pow(LOW_FREQ / HIGH_FREQ, index.y);
@@ -100,8 +116,10 @@ try {
         "index.x": index.x,
         "index.y": index.y,
         "distance": distance,
-        "threshold": PINCH_THRESHOLD,
+        "on 阈值": PINCH_ON_THRESHOLD,
+        "off 阈值": PINCH_OFF_THRESHOLD,
         "pinch": pinch,
+        "audio": audioStarted ? (noteIsOn ? "🔊 发声中" : "已启动·静音") : "未启动",
         "frequency (Hz)": Math.round(freq),
       });
     } else {
@@ -110,6 +128,7 @@ try {
         synth.triggerRelease();
         noteIsOn = false;
       }
+      pinch = false;
       pinchState.textContent = "OPEN";
       pinchState.style.color = "#e8e8f0";
       DebugPanel.show({ "提示": "没有检测到手" });

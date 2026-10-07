@@ -103,6 +103,7 @@ try {
         "alpha": alpha,
         "smoothing": smoothingToggle.checked ? "ON" : "OFF",
         "frequency (Hz)": Math.round(freq),
+        "audio": audioStarted ? "🔊 已启动" : "未启动",
       });
     } else {
       volume.volume.rampTo(-Infinity, 0.2);
